@@ -1,0 +1,8 @@
+titanic_combined		1309
+
+titanic_with_age_labels	1046
+titanic_no_age_labels	263
+
+predicted_age_labels	Has all predicted ages
+
+  - Note that panda dataframe rows copy by their index to another dataframe
