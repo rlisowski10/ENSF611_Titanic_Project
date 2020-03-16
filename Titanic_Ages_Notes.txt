@@ -6,3 +6,28 @@ titanic_no_age_labels	263
 predicted_age_labels	Has all predicted ages
 
   - Note that panda dataframe rows copy by their index to another dataframe
+
+Fields:
+  Survival
+  Class
+  Title
+  Gender
+  Age
+  Relatives
+  Fare
+  Embarked
+  
+Data Exploration:
+  [Ryan - Done] Title vs Age
+  [Ryan - Done] Title vs Survival
+  [Ryan - Done] Title vs Class
+  [Ryan - Done] Title vs Gender
+  [Ryan - Done] Title vs Fare
+  [Kaan] Class vs Age
+  [Kaan] Class vs Relatives
+  [Kaan] Gender vs Fare
+  [Kaan] Gender vs Embarked
+  [Ryan] Age vs Fare
+  [X] Age vs Embarked
+  [X] Fare vs Embarked
+  
