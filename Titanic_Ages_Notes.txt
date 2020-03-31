@@ -31,3 +31,4 @@ Data Exploration:
   [X] Age vs Embarked
   [X] Fare vs Embarked
   
+Try removing fare, and dealing with all titles, number of relatives
