@@ -1,1 +1,65 @@
-{"ongoing_trials": {}, "hyperparameters": {"space": [{"class_name": "Int", "config": {"name": "n_layers", "default": null, "min_value": 1, "max_value": 6, "step": 1, "sampling": null}}, {"class_name": "Float", "config": {"name": "dropout", "default": 0.0, "min_value": 0.0, "max_value": 0.3, "step": 0.05, "sampling": null}}, {"class_name": "Int", "config": {"name": "dense_{i}_units", "default": null, "min_value": 256, "max_value": 2048, "step": 256, "sampling": null}}, {"class_name": "Choice", "config": {"name": "activation", "default": "softmax", "values": ["softmax", "sigmoid"], "ordered": false}}, {"class_name": "Float", "config": {"name": "learning_rate", "default": 0.0001, "min_value": 0.0001, "max_value": 0.001, "step": 0.0002, "sampling": null}}], "values": {"n_layers": 1, "dropout": 0.0, "dense_{i}_units": 256, "activation": "softmax", "learning_rate": 0.0001}}, "seed": 6987, "seed_state": 7142, "tried_so_far": ["e9e0dd878fe9ed5d429eaf9f5cb94664", "d15513cc3d31fa7a9edc944c869b93f5", "590fb2dd464cc77925e56e52933a7f40", "0416a99dde42c1a65075a0d2955800ca", "8c5638f32037f1531fe2f312bac2e282", "c056409eb9c49641c611d50a5088b509", "005434bc5b81c32abbb7416de21e17b9", "61904258a90497c8730b7d5c51731255", "3e7cfd77f0af924f45c79e4db4888939", "312086bef1e521a7783f9773e4240dd7", "da5dc69f6508672dec93c1faaf1aa71d", "3e0ff1af2586edb4927fe6142688c242", "9c0d8a849a89aa43bf9430b37b92f8c4", "4971f5c0e3fd69b115f4708896306794", "27ef4735f4ea710e4fd6079e6bef3784", "19795aa8dd872c1e59c7c8b51ab2be19", "5ba58e309536cdd53cf1f5b1173a2940", "c67ff4ea63f25f5448ff13d3ef831f7d", "6401dcef5192bc96bbe6f9e18e38997b", "b25d1473c09d7d793bc586debb858a9f", "5dd5a7b7e6fcf0fdd446a08703a11d98", "5afe696d9ed7098a007de8afc3ec5971", "62d41c710ac3653d4257a7a5496070dd", "772ae851a4b8a2fb6371b50fb6c841d2", "f47b993e24a5932297f2b65ec55e38b8", "43455213013056f3aaaf632bc3fd16cc", "740661b9c4f80d11f7245ca989bbb0b9", "b715d747223453881cbc81b9d812200f", "0fa33d8fb2b2d47fda04e70b5cbd86c5", "44bdc4df412471457b6565cef365c248"]}
+{
+    "ongoing_trials": {},
+    "hyperparameters": {
+        "space": [{
+                "class_name": "Int",
+                "config": {
+                    "name": "n_layers",
+                    "default": null,
+                    "min_value": 1,
+                    "max_value": 6,
+                    "step": 1,
+                    "sampling": null
+                }
+            }, {
+                "class_name": "Float",
+                "config": {
+                    "name": "dropout",
+                    "default": 0.0,
+                    "min_value": 0.0,
+                    "max_value": 0.3,
+                    "step": 0.05,
+                    "sampling": null
+                }
+            }, {
+                "class_name": "Int",
+                "config": {
+                    "name": "dense_{i}_units",
+                    "default": null,
+                    "min_value": 256,
+                    "max_value": 2048,
+                    "step": 256,
+                    "sampling": null
+                }
+            }, {
+                "class_name": "Choice",
+                "config": {
+                    "name": "activation",
+                    "default": "softmax",
+                    "values": ["softmax", "sigmoid"],
+                    "ordered": false
+                }
+            }, {
+                "class_name": "Float",
+                "config": {
+                    "name": "learning_rate",
+                    "default": 0.0001,
+                    "min_value": 0.0001,
+                    "max_value": 0.001,
+                    "step": 0.0002,
+                    "sampling": null
+                }
+            }
+        ],
+        "values": {
+            "n_layers": 1,
+            "dropout": 0.0,
+            "dense_{i}_units": 256,
+            "activation": "softmax",
+            "learning_rate": 0.0001
+        }
+    },
+    "seed": 6987,
+    "seed_state": 7142,
+    "tried_so_far": ["e9e0dd878fe9ed5d429eaf9f5cb94664", "d15513cc3d31fa7a9edc944c869b93f5", "590fb2dd464cc77925e56e52933a7f40", "0416a99dde42c1a65075a0d2955800ca", "8c5638f32037f1531fe2f312bac2e282", "c056409eb9c49641c611d50a5088b509", "005434bc5b81c32abbb7416de21e17b9", "61904258a90497c8730b7d5c51731255", "3e7cfd77f0af924f45c79e4db4888939", "312086bef1e521a7783f9773e4240dd7", "da5dc69f6508672dec93c1faaf1aa71d", "3e0ff1af2586edb4927fe6142688c242", "9c0d8a849a89aa43bf9430b37b92f8c4", "4971f5c0e3fd69b115f4708896306794", "27ef4735f4ea710e4fd6079e6bef3784", "19795aa8dd872c1e59c7c8b51ab2be19", "5ba58e309536cdd53cf1f5b1173a2940", "c67ff4ea63f25f5448ff13d3ef831f7d", "6401dcef5192bc96bbe6f9e18e38997b", "b25d1473c09d7d793bc586debb858a9f", "5dd5a7b7e6fcf0fdd446a08703a11d98", "5afe696d9ed7098a007de8afc3ec5971", "62d41c710ac3653d4257a7a5496070dd", "772ae851a4b8a2fb6371b50fb6c841d2", "f47b993e24a5932297f2b65ec55e38b8", "43455213013056f3aaaf632bc3fd16cc", "740661b9c4f80d11f7245ca989bbb0b9", "b715d747223453881cbc81b9d812200f", "0fa33d8fb2b2d47fda04e70b5cbd86c5", "44bdc4df412471457b6565cef365c248"]
+}
