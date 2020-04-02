@@ -1,0 +1,116 @@
+[Trial complete]
+[Trial summary]
+ |-Trial ID: 4e87b026331bffcf3dc7c31933b10a86
+ |-Score: 0.8444444537162781
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: sigmoid
+ |-dense_{i}_units: 512
+ |-dropout: 0.30000000000000004
+ |-learning_rate: 0.00030000000000000003
+ |-n_layers: 2
+[Results summary]
+ |-Results in C:\_keras\1585802795\untitled_project
+ |-Showing 10 best trials
+ |-Objective(name='val_accuracy', direction='max')
+[Trial summary]
+ |-Trial ID: 88a05ca2162acab255533c5060d218c6
+ |-Score: 0.9111111164093018
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: softmax
+ |-dense_{i}_units: 1536
+ |-dropout: 0.05
+ |-learning_rate: 0.00030000000000000003
+ |-n_layers: 4
+[Trial summary]
+ |-Trial ID: 973beb84feb18e4671a9e401dfb59cbd
+ |-Score: 0.8888888955116272
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: softmax
+ |-dense_{i}_units: 256
+ |-dropout: 0.05
+ |-learning_rate: 0.0007000000000000001
+ |-n_layers: 4
+[Trial summary]
+ |-Trial ID: a7cd7e4965da6638c92bee515f994e26
+ |-Score: 0.8888888955116272
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: softmax
+ |-dense_{i}_units: 1792
+ |-dropout: 0.1
+ |-learning_rate: 0.0009000000000000002
+ |-n_layers: 6
+[Trial summary]
+ |-Trial ID: 14616d0c27e1dc2cc3c702e4c1539bbe
+ |-Score: 0.8888888955116272
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: softmax
+ |-dense_{i}_units: 1792
+ |-dropout: 0.1
+ |-learning_rate: 0.0007000000000000001
+ |-n_layers: 6
+[Trial summary]
+ |-Trial ID: adc035d6e693cf3cf64ac6bd617035e5
+ |-Score: 0.8888888955116272
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: sigmoid
+ |-dense_{i}_units: 1536
+ |-dropout: 0.05
+ |-learning_rate: 0.0005000000000000001
+ |-n_layers: 4
+[Trial summary]
+ |-Trial ID: c3ec9702b668fb3571c48ecb5a673cc9
+ |-Score: 0.8888888955116272
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: sigmoid
+ |-dense_{i}_units: 768
+ |-dropout: 0.25
+ |-learning_rate: 0.0009000000000000002
+ |-n_layers: 5
+[Trial summary]
+ |-Trial ID: 79ceffdf29815c1f33f0d3ce93682fe2
+ |-Score: 0.8888888955116272
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: sigmoid
+ |-dense_{i}_units: 1024
+ |-dropout: 0.05
+ |-learning_rate: 0.0005000000000000001
+ |-n_layers: 4
+[Trial summary]
+ |-Trial ID: 65d7a19eec5aa6805f59a9254633b615
+ |-Score: 0.8888888955116272
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: softmax
+ |-dense_{i}_units: 768
+ |-dropout: 0.05
+ |-learning_rate: 0.0007000000000000001
+ |-n_layers: 4
+ |-Trial ID: 80d78057639a6136c62e25f190381d2d
+ |-Score: 0.8777777552604675
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: sigmoid
+ |-dense_{i}_units: 512
+ |-dropout: 0.2
+ |-learning_rate: 0.0005000000000000001
+ |-n_layers: 4
+[Trial summary]
+ |-Trial ID: 08a7045efc7e65604ac9cf017993994a
+ |-Score: 0.8777777552604675
+ |-Best step: 0
+ > Hyperparameters:
+ |-activation: softmax
+ |-dense_{i}_units: 1792
+ |-dropout: 0.15000000000000002
+ |-learning_rate: 0.00030000000000000003
+ |-n_layers: 4
+None
+Accuracy for test dataset: 0.77512

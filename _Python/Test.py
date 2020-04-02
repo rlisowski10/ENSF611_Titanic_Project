@@ -1,19 +1,35 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.metrics import accuracy_score
 from sklearn import tree
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
+from tensorflow import keras
+from tensorflow.keras.layers import Dense, Activation, Dropout
+from tensorflow.keras.optimizers import Adam
+from kerastuner.tuners import RandomSearch
+from keras.utils import np_utils
+import time
+import os
+import matplotlib.pyplot as plt
 
 # Read in titanic training data
 titanic_df = pd.read_csv("_Data/train_with_ages.csv")
 titanic_testing_df = pd.read_csv("_Data/test_with_ages.csv")
+titanic_solutions_df = pd.read_csv("_Data/solution_set.csv")
 titanic_submission_df = titanic_testing_df
+
+# Prepare solutions
+titanic_submission_df = titanic_submission_df.replace('"', '', regex=True)
+titanic_solutions_df = titanic_solutions_df.replace('"', '', regex=True)
+titanic_solutions_df = titanic_submission_df.merge(titanic_solutions_df, how='left', left_on=[
+                                                   "Name", "Ticket"], right_on=["name", "ticket"])
+titanic_solutions_df = titanic_solutions_df[['PassengerId', 'survived']]
+# titanic_solutions_df.to_csv('../_Submission/010_temp_Submission_Solutions.csv', index=False)
 
 # Set the fare to '0' for titanic_testing_df index '152'
 
@@ -28,14 +44,60 @@ def add_fare_values(fare):
 titanic_testing_df['Fare'] = titanic_testing_df.apply(
     lambda row: add_fare_values(row['Fare']), axis=1)
 
-# Describe the data
-titanic_df.describe()
+# Calculate the number of relatives for each row
 
-# Drop columns that data that will not likely be helpful
-titanic_df = titanic_df.drop(
-    ['PassengerId', 'Name', 'Ticket', 'Cabin', 'Embarked'], axis=1)
-titanic_testing_df = titanic_testing_df.drop(
-    ['PassengerId', 'Name', 'Ticket', 'Cabin', 'Embarked'], axis=1)
+
+def add_relatives(sibsp, parch):
+    return sibsp + parch
+
+
+titanic_df['Relatives'] = titanic_df.apply(
+    lambda row: add_relatives(row['SibSp'], row['Parch']), axis=1)
+titanic_testing_df['Relatives'] = titanic_testing_df.apply(
+    lambda row: add_relatives(row['SibSp'], row['Parch']), axis=1)
+
+# Determine the per ticket price for each passenger.
+titanic_combined_df = titanic_df.append(titanic_testing_df)
+tickets = titanic_combined_df.groupby(
+    ['Ticket'])['PassengerId'].count().reset_index()
+
+
+def fare_per_person(row):
+    fare_per_person = row['Fare'] / \
+        tickets[tickets.Ticket == row['Ticket']]['PassengerId']
+    return fare_per_person.values[0]
+
+
+titanic_df['FarePerPerson'] = titanic_df.apply(fare_per_person, axis=1)
+titanic_testing_df['FarePerPerson'] = titanic_testing_df.apply(
+    fare_per_person, axis=1)
+
+# Bin the ages
+
+
+def bin_age(age):
+    binned_age = 0
+
+    if age > 0 and age <= 15:
+        binned_age = 0
+    elif age > 15 and age <= 25:
+        binned_age = 1
+    elif age > 25 and age <= 35:
+        binned_age = 2
+    elif age > 35 and age <= 45:
+        binned_age = 3
+    elif age > 45 and age <= 55:
+        binned_age = 4
+    elif age > 55:
+        binned_age = 5
+
+    return binned_age
+
+
+titanic_df['AgeBinned'] = titanic_df.apply(
+    lambda row: bin_age(row['Age']), axis=1)
+titanic_testing_df['AgeBinned'] = titanic_testing_df.apply(
+    lambda row: bin_age(row['Age']), axis=1)
 
 # Convert Female to 0 and Male to 1
 titanic_df = titanic_df.replace('female', 0)
@@ -44,24 +106,25 @@ titanic_df = titanic_df.replace('male', 1)
 titanic_testing_df = titanic_testing_df.replace('female', 0)
 titanic_testing_df = titanic_testing_df.replace('male', 1)
 
-# Compare Age vs Survival
-point_plot = sns.pointplot(x='Age', y='Survived', data=titanic_df, ci=None)
-plt.xlabel('Age')
-plt.ylabel('Survived')
-plt.title('Age vs. Survival')
+# Impute 2 missing values of embarked with most common value of 'S'
+titanic_df.Embarked.fillna(titanic_df.Embarked.describe().top, inplace=True)
+titanic_testing_df.Embarked.fillna(
+    titanic_testing_df.Embarked.describe().top, inplace=True)
 
-# Decrease number of labels along x-axis
-for label in point_plot.get_xticklabels():
-    if np.float(label.get_text()) % 10 == 0:
-        label.set_visible(True)
-    else:
-        label.set_visible(False)
+# Drop columns that data that will not likely be helpful
+titanic_df = titanic_df.drop(['PassengerId', 'Name', 'Age', 'SibSp',
+                              'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked'], axis=1)
+titanic_testing_df = titanic_testing_df.drop(
+    ['PassengerId', 'Name', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked'], axis=1)
 
 # Convert pandas dataframe into numpy array
 titanic_np = titanic_df.to_numpy()
 titanic_testing_np = titanic_testing_df.to_numpy()
+titanic_solutions_np = titanic_solutions_df.drop(
+    ['PassengerId'], axis=1).to_numpy()
 print(f'Shape of titanic_np: {titanic_np.shape}')
 print(f'Shape of titanic_testing_np: {titanic_testing_np.shape}')
+print(f'Shape of titanic_solutions_np: {titanic_solutions_np.shape}')
 
 # Create separate numpy arrays for features and labels
 titanic_features = titanic_np[:, 1:]
@@ -81,56 +144,90 @@ print(f'Shape of labels_train: {labels_train.shape}')
 print(f'Shape of features_test: {features_test.shape}')
 print(f'Shape of labels_test: {labels_test.shape}')
 
-# Perform a grid search for the chosen classifier
+# Grid Search for Decision Tree Classifier
+algorithm = "ANN"
+
+# Tuning the Neural Network
 
 
-def grid_search(classifier, param_grid):
-    classifier = GridSearchCV(classifier, param_grid, verbose=6, n_jobs=-1)
-    classifier.fit(features_train, labels_train)
-    classifier.best_params_
-    print(classifier.best_params_)
-    print(f'Best score: {classifier.best_score_}')
+def build_model(hp):
+    n_features = features_train.shape[1]
 
-# Train and validate the model for the chosen classifier
+    model = keras.models.Sequential()
 
+    for i in range(hp.Int("n_layers", 1, 6)):
+        model.add(
+            Dropout(hp.Float("dropout", min_value=0.0, max_value=0.3, step=0.05)))
+        model.add(Dense(hp.Int("dense_{i}_units", min_value=256,
+                               max_value=2048, step=256), input_dim=n_features, activation='relu'))
 
-def train_validate_model(model, algorithm):
-    model = model.fit(features_train, labels_train)
-    labels_predict = model.predict(features_test)
+    model.add(Dropout(0.15))
+    model.add(Dense(n_classes, input_dim=n_features, activation=hp.Choice(
+        'activation', values=['softmax', 'sigmoid'])))
 
-    accuracy = accuracy_score(labels_predict, labels_test)
-    print(f"Accuracy for {algorithm}: {accuracy:.3f}")
+    # Compile your model with accuracy as your metric.
+    opt = Adam(hp.Float("learning_rate", min_value=0.0001, max_value=0.001, step=0.0002))
+    model.compile(optimizer=opt, loss='categorical_crossentropy',
+                  metrics=['accuracy'])
 
     return model
 
-# Predict Survived labels for testing dataset
 
+if algorithm == "ANN":
+    # Convert the labels to one-hot encoding.
+    n_classes=2
+    labels_train=np_utils.to_categorical(titanic_labels, n_classes)
+    print(f'Shape of one hot encoded labels_train: {labels_train.shape}')
 
-def predict_testing_labels(model):
-    labels_testing_predict = model.predict(titanic_testing_features)
-    return labels_testing_predict
+    # Setup keras tuner.
+    tuner=RandomSearch(
+        build_model,
+        objective="val_accuracy",
+        max_trials=30,
+        executions_per_trial=1,
+        directory=os.path.normpath('C:/_keras/' + str(int(time.time())))
+    )
 
+    tuner.search(
+        x=titanic_features,
+        y=labels_train,
+        verbose=1,
+        epochs=250,
+        batch_size=64,
+        validation_split=.10
+    )
 
-# Grid Search for Decision Tree Classifier
-algorithm = "SVC"
+# Print the best tuner hyperparameters
+print(tuner.results_summary())
+model=tuner.get_best_models(num_models=1)
 
-if algorithm == "DT":
-    dtc_grid_search = tree.DecisionTreeClassifier()
-    param_grid = {'criterion': ['gini', 'entropy'], 'min_samples_split': [
-        2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]}
-    grid_search(dtc_grid_search, param_grid)
-elif algorithm == "LogReg":
-    log_reg_grid_search = LogisticRegression()
-    param_grid = {'penalty': ['l1', 'l2'], 'C': [
-        0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2.0]}
-    grid_search(log_reg_grid_search, param_grid)
-elif algorithm == "KNN":
-    KNN_grid_search = KNeighborsClassifier()
-    param_grid = {'weights': ['uniform', 'distance'], 'n_neighbors': [
-        1, 2, 6, 10, 12, 14, 16, 18, 20, 30, 40], 'algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute']}
-    grid_search(KNN_grid_search, param_grid)
-elif algorithm == "SVC":
-    SVC_grid_search = SVC()
-    #param_grid = {'kernel': ['linear', 'poly', 'rbf', 'sigmoid'], 'C': [0.01, 0.2, 0.6, 1], 'degree': [1, 2, 3, 4], 'gamma': ['scale', 'auto']}
-    param_grid = {'kernel': ['poly'], 'degree': [1, 2, 3, 4], 'gamma': ['scale']}
-    grid_search(SVC_grid_search, param_grid)
+# Predict the test set labels.
+labels_testing_predict=model[0].predict(titanic_testing_features)
+labels_testing_predict=np.argmax(labels_testing_predict, axis=-1)
+
+# Convert numpy labels array to dataframe
+labels_testing_predict_df=pd.DataFrame(
+    labels_testing_predict, index=None, columns=['Survived'])
+
+# Copy the predicted survival labels to the submission dataframe and change column to int64
+titanic_submission_df['Survived']=labels_testing_predict_df['Survived']
+titanic_submission_df['Survived']=titanic_submission_df['Survived'].astype(
+    'int64')
+
+# Drop all columns not needed for submission.
+titanic_submission_df_final=titanic_submission_df.drop(
+    ['Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked'], axis=1)
+
+# Write to CSV results file
+titanic_submission_df_final.to_csv(
+    '_Submission/014_Ryan_Submission_ANN.csv', index=False)
+
+# Calculate the accuracy versus the Kaggle test solutions (doesn't affect previous csv export)
+titanic_submission_df_final=titanic_submission_df_final.drop(
+    ['PassengerId'], axis=1)
+titanic_solutions_df=titanic_solutions_df.drop(['PassengerId'], axis=1)
+titanic_solutions_df.columns=['Survived']
+
+accuracy_test=accuracy_score(
+    titanic_solutions_df, titanic_submission_df_final)
+print(f"Accuracy for test dataset: {accuracy_test:.5f}")
