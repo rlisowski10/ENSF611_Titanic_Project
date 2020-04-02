@@ -155,18 +155,17 @@ def build_model(hp):
 
     model = keras.models.Sequential()
 
-    for i in range(hp.Int("n_layers", 1, 6)):
+    for i in range(hp.Int("n_layers", min_value=2, max_value=5, step=1)):
         model.add(
-            Dropout(hp.Float("dropout", min_value=0.0, max_value=0.3, step=0.05)))
-        model.add(Dense(hp.Int("dense_{i}_units", min_value=256,
-                               max_value=2048, step=256), input_dim=n_features, activation='relu'))
+            Dropout(hp.Float("dropout", min_value=0.00, max_value=0.08, step=0.02)))
+        model.add(Dense(hp.Int("dense_{i}_units", min_value=1024,
+                               max_value=2304, step=256), input_dim=n_features, activation='relu'))
 
-    model.add(Dropout(0.15))
     model.add(Dense(n_classes, input_dim=n_features, activation=hp.Choice(
         'activation', values=['softmax', 'sigmoid'])))
 
     # Compile your model with accuracy as your metric.
-    opt = Adam(hp.Float("learning_rate", min_value=0.0001, max_value=0.001, step=0.0002))
+    opt = Adam(hp.Float("learning_rate", min_value=0.0002, max_value=0.0007, step=0.0001))
     model.compile(optimizer=opt, loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
@@ -183,7 +182,7 @@ if algorithm == "ANN":
     tuner=RandomSearch(
         build_model,
         objective="val_accuracy",
-        max_trials=30,
+        max_trials=6,
         executions_per_trial=1,
         directory=os.path.normpath('C:/_keras/' + str(int(time.time())))
     )
