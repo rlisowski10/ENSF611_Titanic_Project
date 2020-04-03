@@ -1,11 +1,11 @@
 
-=> (Added Fare per Person) 0.734 	=> (1024 Nodes & 300 epochs)0.758 			=> (Added Relatives) 0.746 
-=> (Binned Ages) 0.749 				=> (Sigmoid) 0.766 							=> (Dropouts 0.2) 0.775 
-=> (Dropouts 0.3) 0.746 			=> (Dropouts 0.1) 0.789 					=> (Dropouts 0.15) 0.792 
-=> (Dropouts 0.05) 0.778 			=> (Dropouts 0.15 and Binned Fare) 0.785 	=> (Dropouts 0.15) 0.792 
-=> (Unbinned Age) 0.612 			=> (Dropouts 0.15 and Binned Age) 0.789 	=> (Embarked) 0.780 
-=> (Embarked OneHot) 0.766 			=> (Dropouts 0.15) 0.789 					=> (Validation 0.15) 0.773 
-=> (Validation 0.05) 0.775 			=> (Validation 0.10) 0.761 					=> (RMSProp Optimizer) 0.766
-=> (Dropouts 0.15) 0.794 			=> (Added another layer & Nodes to 1500) 0.79187 								
+	=> (Added Fare per Person) 0.734 	=> (1024 Nodes & 300 epochs)0.758 			=> (Added Relatives) 0.746 
+	=> (Binned Ages) 0.749 				=> (Sigmoid) 0.766 							=> (Dropouts 0.2) 0.775 
+	=> (Dropouts 0.3) 0.746 			=> (Dropouts 0.1) 0.789 					=> (Dropouts 0.15) 0.792 
+	=> (Dropouts 0.05) 0.778 			=> (Dropouts 0.15 and Binned Fare) 0.785 	=> (Dropouts 0.15) 0.792 
+	=> (Unbinned Age) 0.612 			=> (Dropouts 0.15 and Binned Age) 0.789 	=> (Embarked) 0.780 
+	=> (Embarked OneHot) 0.766 			=> (Dropouts 0.15) 0.789 					=> (Validation 0.15) 0.773 
+	=> (Validation 0.05) 0.775 			=> (Validation 0.10) 0.761 					=> (RMSProp Optimizer) 0.766
+	=> (Added another layer & Nodes to 1500) 0.79187 								=> (Dropouts 0.15) 0.799
 
 
